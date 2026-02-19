@@ -22,9 +22,27 @@ static double DRNOR() {
   return R11 * cos(R22);
 }
 
-double u_interp(FHMD* fh, int k, int d) {
-  double x = (fh->step_MD % fh->FH_step) / (double)fh->FH_step;
-  return (1.0 - x) * fh->arr[k].u_fh[d] + x * fh->arr_next[k].u_fh[d];
+// double u_interp(FHMD* fh, int k, int d) {
+//   double x = (fh->step_MD % fh->FH_step) / (double)fh->FH_step;
+//   return (1.0 - x) * fh->arr[k].u_fh[d] + x * fh->arr_next[k].u_fh[d];
+// }
+
+double u_interp(FHMD *fh, int k, int d)
+{
+    double x = (fh->step_MD % fh->FH_step) / (double)fh->FH_step;
+
+    // Mean (linear interpolation)
+    double u_mean =
+        (1.0 - x) * fh->arr[k].u_fh[d] +
+         x        * fh->arr_next[k].u_fh[d];
+
+    // Restore missing variance
+    double sigma_missing =
+        sqrt(2.0 * x * (1.0 - x)) * fh->std_u;
+
+    double fluct_u = sigma_missing * DRNOR();
+
+    return u_mean + 1.0 * fluct_u;  //  empirical factor to prevent divergence, can be adjusted or removed
 }
 
 double s_k_t(FHMD* fh, double t, double k, double S) {

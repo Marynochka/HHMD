@@ -1972,10 +1972,29 @@ static double DRNOR() {
 //     // return ro_mean + fluct_rho;
 //     return fh->arr_next[k].ro_fh;
 // }
-double ro_interp(FHMD *fh, int k) {
+// double ro_interp(FHMD *fh, int k) {
 
-	double x = (fh->step_MD % fh->FH_step) / (double) fh->FH_step;
-    return (1.0-x)*fh->arr[k].ro_fh + x*fh->arr_next[k].ro_fh;
+// 	double x = (fh->step_MD % fh->FH_step) / (double) fh->FH_step;
+//     return (1.0-x)*fh->arr[k].ro_fh + x*fh->arr_next[k].ro_fh;
+// }
+
+double ro_interp(FHMD *fh, int k)
+{
+    double x = (fh->step_MD % fh->FH_step) / (double)fh->FH_step;
+
+    // Linear interpolation (mean)
+    double ro_mean =
+        (1.0 - x) * fh->arr[k].ro_fh +
+         x        * fh->arr_next[k].ro_fh;
+
+    // Missing variance due to temporal interpolation
+    double sigma_missing =
+        sqrt(2.0 * x * (1.0 - x)) * fh->std_rho;
+
+    // Restore correct fluctuations
+    double fluct_rho = sigma_missing * DRNOR();
+
+    return ro_mean + 0.15 * fluct_rho;  // 0.5 is an empirical factor to prevent divergence, can be adjusted or removed
 }
 
 void fhmd_calculate_MDFH_terms_openmp(rvec x[], rvec v[], float mass[], rvec f[], int N_atoms, FHMD *fh)

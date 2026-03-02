@@ -26,7 +26,6 @@ static double DRNOR() {
 //   double x = (fh->step_MD % fh->FH_step) / (double)fh->FH_step;
 //   return (1.0 - x) * fh->arr[k].u_fh[d] + x * fh->arr_next[k].u_fh[d];
 // }
-
 double u_interp(FHMD *fh, int k, int d)
 {
     double x = (fh->step_MD % fh->FH_step) / (double)fh->FH_step;
@@ -36,15 +35,18 @@ double u_interp(FHMD *fh, int k, int d)
         (1.0 - x) * fh->arr[k].u_fh[d] +
          x        * fh->arr_next[k].u_fh[d];
 
-    // Restore missing variance
+    // Variance lost by interpolation
     double sigma_missing =
         sqrt(2.0 * x * (1.0 - x)) * fh->std_u;
 
-    double fluct_u = sigma_missing * DRNOR();
+    double fluct_interp = sigma_missing * DRNOR();
 
-    return u_mean + 1.0 * fluct_u;  //  empirical factor to prevent divergence, can be adjusted or removed
+    // Per-MD-step fluctuation from FH temporal coarse-graining
+    double sigma_step = fh->std_u * sqrt((double)fh->FH_step);
+    double fluct_step = sigma_step * DRNOR();
+
+    return u_mean + fluct_interp + 2.0 *fluct_step;
 }
-
 double s_k_t(FHMD* fh, double t, double k, double S) {
   double a = log(2.0) / log(t);  // 0.5 - so starts from 0.5
   return 1.0 / (1.0 + pow(pow(S, a) - 1.0, k));

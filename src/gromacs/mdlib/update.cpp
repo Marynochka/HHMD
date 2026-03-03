@@ -1994,7 +1994,8 @@ double ro_interp(FHMD *fh, int k)
     // Restore correct fluctuations
     double fluct_rho = sigma_missing * DRNOR();
 
-    return ro_mean + 0.15 * fluct_rho;  // 0.5 is an empirical factor to prevent divergence, can be adjusted or removed
+    // return ro_mean + 0.15 * fluct_rho;  // 0.5 is an empirical factor to prevent divergence, can be adjusted or removed
+    return ro_mean;  
 }
 
 void fhmd_calculate_MDFH_terms_openmp(rvec x[], rvec v[], float mass[], rvec f[], int N_atoms, FHMD *fh)

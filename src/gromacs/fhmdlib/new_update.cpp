@@ -45,7 +45,7 @@ double u_interp(FHMD *fh, int k, int d)
     double sigma_step = fh->std_u * sqrt((double)fh->FH_step);
     double fluct_step = sigma_step * DRNOR();
 
-    return u_mean + fluct_interp + 2.0 *fluct_step;
+    return u_mean + fluct_interp + 3.0 *fluct_step;
 }
 double s_k_t(FHMD* fh, double t, double k, double S) {
   double a = log(2.0) / log(t);  // 0.5 - so starts from 0.5

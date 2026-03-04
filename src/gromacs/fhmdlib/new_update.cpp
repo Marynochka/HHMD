@@ -613,20 +613,20 @@ for (int d=0; d<3; d++)
 
         /// insert here v_hybr for s >0.99
 
-        if (S >= 0.99){ 
-          for (d = 0; d < DIM; d++) {
-                fh->v_hybr[n][d] = 0.0;
-              }
+        // if (S >= 0.99){ 
+        //   for (d = 0; d < DIM; d++) {
+        //         fh->v_hybr[n][d] = 0.0;
+        //       }
 
-          for (int q = 0; q < 4; q++) {
-            double mu_k = fh->cells_data[n].cells_mu[q];
-            int k = fh->cells_data[n].cells[q];
-            for (d = 0; d < DIM; d++) {
-            fh->v_hybr[n][d] +=
-                    mu_k * arr[k].avg_mass_fh_particle * u_interp(fh, k, d);
-            }
-          }
-        }
+        //   for (int q = 0; q < 4; q++) {
+        //     double mu_k = fh->cells_data[n].cells_mu[q];
+        //     int k = fh->cells_data[n].cells[q];
+        //     for (d = 0; d < DIM; d++) {
+        //     fh->v_hybr[n][d] +=
+        //             mu_k * arr[k].avg_mass_fh_particle * u_interp(fh, k, d);
+        //     }
+        //   }
+        // }
 
         for (int q = 0; q < 4; q++) {
           //          if (fh->tssl->in_this_cell(q, rsc))

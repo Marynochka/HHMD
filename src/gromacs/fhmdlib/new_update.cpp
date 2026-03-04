@@ -561,15 +561,15 @@ for (int d=0; d<3; d++)
           // acceleration of the hybrid particle (Eq. 13 in formulas_April.pdf)
 
           // s =1 MARYNA fix
-          if (S < 0.99)
-          {
+          //if (S < 0.99)
+          //{
             a_hybr[d] = ((1.0 - S) * (1.0 - lambda_s)) * f[n][d] / fh->m_hybr[n];
-          }
-          else
-          {
-            a_hybr[d] = 0.0;
-            // fh->v_hybr[n][d] = 0;
-          }
+          //}
+          //else
+          //{
+          //  a_hybr[d] = 0.0;
+          //  // fh->v_hybr[n][d] = 0;
+          //}
           // if (S < 0.99)  //  we anyway do not use MD forces at S=1
           //   a_hybr[d] =  (1.0 - S) * f[n][d] / fh->m_hybr[n];
           // else
@@ -893,7 +893,7 @@ for (int d=0; d<3; d++)
         //   }
         for (d = 0; d < DIM; d++)
         {
-          if (S >= 0.99)
+/*        if (S >= 0.99)
           {
             double T0 = 0.730094;          // target reduced temperature
             double tau_T = fh->tau_m * dt; // coupling time - was 5 before
@@ -910,7 +910,7 @@ for (int d=0; d<3; d++)
             fh->x_hybr[n][d] = fh->x_hybr[n][d] + fh->v_hybr[n][d] * dt;
           }
           else
-          {
+*/          {
             // classical integrator
             //  fh->v_hybr[n][d] += a_hybr[d]*dt;
             // fh->x_hybr[n][d] = fh->x_hybr[n][d] + fh->v_hybr[n][d] * dt;
@@ -963,10 +963,15 @@ for (int d=0; d<3; d++)
             //  Maryna therm
 
               fh->p_hybr_m[n][d] = fh->m_hybr[n] * fh->v_hybr[n][d];
-              fh->p_mol_m[n][d] =
-                  (fh->p_hybr_m[n][d] - (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d]) / ((1.0 - S) * (1.0 - lambda_s));
-              double md_part = (fh->p_hybr_m[n][d] - (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d]);
 
+              fh->p_mol_m[n][d] = 0;
+              if (S<0.99)
+                  fh->p_mol_m[n][d] =
+                      (fh->p_hybr_m[n][d] - (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d]) / ((1.0 - S) * (1.0 - lambda_s));
+              double md_part = 0;
+              if (S<0.99)
+                  md_part = (fh->p_hybr_m[n][d] - (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d]);
+              
               // Thermostat parameters (reduced units, kB = 1)
               double T0 = 0.730094;          // target reduced temperature
               double tau_T = fh->tau_m * dt; // coupling time - was 5 before
@@ -986,8 +991,8 @@ for (int d=0; d<3; d++)
 
               // Rebuild hybrid momentum and velocity
               fh->p_hybr_m[n][d] = (1.0 - S) * (1.0 - lambda_s) *
-              fh->p_mol_m[n][d] + (S + lambda_s - S * lambda_s) *
-              fh->p_fhparticle[n][d];
+                  fh->p_mol_m[n][d] + (S + lambda_s - S * lambda_s) *
+                  fh->p_fhparticle[n][d];
               // fh->p_hybr_m[n][d] =
               //     md_part                      // θ · (1−S) p_MD
               //     + (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d] // FH contribution

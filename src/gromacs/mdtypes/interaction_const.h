@@ -131,6 +131,7 @@ typedef struct {
 
     int  hhmd_G_scale;
     real hhmd_G_coeff;
+    int  hhmd_S1;
 
 } interaction_const_t;
 

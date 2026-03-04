@@ -116,22 +116,28 @@
             // cppcheck-suppress unreadVariable
             VLJ = 0;
 
+            if (ic->hhmd_S1)
+                continue;
+
             aj = cj*UNROLLJ + j;
 
             dx  = xi[i*XI_STRIDE+XX] - x[aj*X_STRIDE+XX];
             dy  = xi[i*XI_STRIDE+YY] - x[aj*X_STRIDE+YY];
             dz  = xi[i*XI_STRIDE+ZZ] - x[aj*X_STRIDE+ZZ];
 
-	    if (ic->hhmd_G_scale)
-	    {
-	    	dx *= ic->hhmd_G_coeff;
+			if (ic->hhmd_G_scale)
+			{
+				dx *= ic->hhmd_G_coeff;
             	dy *= ic->hhmd_G_coeff;
             	dz *= ic->hhmd_G_coeff;
             }
                     
             rsq = dx*dx + dy*dy + dz*dz;
 
-            /* Prepare to enforce the cut-off. */
+            if (rsq < 0.11*0.11)
+                rsq = 0.11*0.11;
+
+			/* Prepare to enforce the cut-off. */
             skipmask = (rsq >= rcut2) ? 0 : skipmask;
             /* 9 flops for r^2 + cut-off check */
 

@@ -1125,19 +1125,24 @@ double gmx::do_md(FILE *fplog, t_commrec *cr, int nfile, const t_filenm fnm[],
              */
 
             fr->ic->hhmd_G_scale = 0;
+		    if (fhmd.S==1)
+    		    fr->ic->hhmd_S1 = 1;
+            else
+            	fr->ic->hhmd_S1 = 0;
+			
 /*            if (is_fhmd)
-	    {
+		    {
                 fr->ic->hhmd_G_coeff = fhmd.hybr_coeff_lin;
-		if (fhmd.S>0)
-	            fr->ic->hhmd_G_scale = 1;
+				if (fhmd.S>0)
+		            fr->ic->hhmd_G_scale = 1;
                 else
-	            fr->ic->hhmd_G_scale = 0;
-	    }
-	    else
-	    {
-		fr->ic->hhmd_G_coeff = 1.0;
+	            	fr->ic->hhmd_G_scale = 0;
+		    }
+		    else
+	    	{
+				fr->ic->hhmd_G_coeff = 1.0;
                 fr->ic->hhmd_G_scale = 0;
-	    }
+	    	}
 */		
             do_force(fplog, cr, ir, step, nrnb, wcycle, top, groups,
                      state->box, state->x, &state->hist,

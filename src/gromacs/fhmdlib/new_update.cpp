@@ -968,7 +968,7 @@ for (int d=0; d<3; d++)
               if (S<0.99)
                   fh->p_mol_m[n][d] =
                       (fh->p_hybr_m[n][d] - (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d]) / ((1.0 - S) * (1.0 - lambda_s));
-              double md_part = 0;
+              double md_part = 0; //with s
               if (S<0.99)
                   md_part = (fh->p_hybr_m[n][d] - (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d]);
               
@@ -980,7 +980,7 @@ for (int d=0; d<3; d++)
               double theta = exp(-gammaT * dt);
               double m_md_i = 1.0 / invmass[n]; // MD mass from invmass
               double sigma = sqrt(m_md_i * T0 * (1.0 - theta * theta));
-              double beta = fh->fluct_m; // assuming 0 <= S < 1
+              double beta = fh->fluct_m; // 
 
 
               // // OU update of MD momentum

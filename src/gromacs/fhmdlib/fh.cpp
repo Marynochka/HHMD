@@ -912,8 +912,8 @@ void compute_random_stress(FHMD *fh)
     for(int i = 0; i < fh->Ntot; i++)
     {
         // Fluctuation-Dissipation factor
-    //    FLUCT =  sqrt(2.0*FHMD_kB*fh->FH_temp)/sqrt(DT*fh->grid.vol[i]*fh->q); 
-        FLUCT = sqrt(2.0*FHMD_kB*fh->FH_temp)/sqrt(DT*fh->box_volume*fh->q*27.0/(double) fh->nat);
+       FLUCT =  sqrt(2.0*FHMD_kB*fh->FH_temp)/sqrt(DT*fh->grid.vol[i]*fh->q); 
+        // FLUCT = sqrt(2.0*FHMD_kB*fh->FH_temp)/sqrt(DT*fh->box_volume*fh->q*27.0/(double) fh->nat);
 
         TCELL   = arr[i].ro_fh*(arr[i].u_fh[0]*arr[i].u_fh[0] + arr[i].u_fh[1]*arr[i].u_fh[1] + arr[i].u_fh[2]*arr[i].u_fh[2])*fh->grid.vol[i]*fh->q/(3.0*FHMD_kB);
         T_INST += TCELL;

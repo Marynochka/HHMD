@@ -45,7 +45,7 @@ double u_interp(FHMD *fh, int k, int d)
     double sigma_step = fh->std_u * sqrt((double)fh->FH_step);
     double fluct_step = sigma_step * DRNOR();
 
-    return u_mean + fluct_interp + 3.0 *fluct_step;
+    return u_mean;
 }
 double s_k_t(FHMD* fh, double t, double k, double S) {
   double a = log(2.0) / log(t);  // 0.5 - so starts from 0.5
@@ -978,21 +978,29 @@ for (int d=0; d<3; d++)
               double gammaT = 1.0 / tau_T;   // friction
 
               double theta = exp(-gammaT * dt);
-              double m_md_i = 1.0 / invmass[n]; // MD mass from invmass
+              // double m_md_i = 1.0 / invmass[n]; // MD mass from invmass
+              double m_md_i = fh->m_hybr[n]; // hybrid mass of the particle
               double sigma = sqrt(m_md_i * T0 * (1.0 - theta * theta));
               double beta = fh->fluct_m; // 
 
 
               // // OU update of MD momentum
               double pmd = fh->p_mol_m[n][d];
-              pmd = theta * pmd + sigma * beta * DRNOR(); // DRNOR() = N(0,1)
+              pmd = theta * pmd; // DRNOR() = N(0,1)
               fh->p_mol_m[n][d] = pmd;
               // md_part *= theta;
 
               // Rebuild hybrid momentum and velocity
-              fh->p_hybr_m[n][d] = (1.0 - S) * (1.0 - lambda_s) *
-                  fh->p_mol_m[n][d] + (S + lambda_s - S * lambda_s) *
+              if (S < 0.99)
+              {
+                  fh->p_hybr_m[n][d] = (1.0 - S) * (1.0 - lambda_s) *
+                  fh->p_mol_m[n][d] +  sigma * 1.58 * DRNOR()+ (S + lambda_s - S * lambda_s) *
                   fh->p_fhparticle[n][d];
+              }
+              else 
+              {
+                fh->p_hybr_m[n][d] += sigma * 1.58 * DRNOR();
+              }
               // fh->p_hybr_m[n][d] =
               //     md_part                      // θ · (1−S) p_MD
               //     + (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d] // FH contribution

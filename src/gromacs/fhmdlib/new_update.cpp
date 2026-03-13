@@ -561,13 +561,14 @@ for (int d=0; d<3; d++)
           // acceleration of the hybrid particle (Eq. 13 in formulas_April.pdf)
 
           // s =1 MARYNA fix
-          //if (S < 0.99)
-          //{
+          if (S < 0.99)
+          {
             a_hybr[d] = ((1.0 - S) * (1.0 - lambda_s)) * f[n][d] / fh->m_hybr[n];
-          //}
-          //else
-          //{
-          //  a_hybr[d] = 0.0;
+          }
+          else
+          {
+           a_hybr[d] = 0.0;
+          }
           //  // fh->v_hybr[n][d] = 0;
           //}
           // if (S < 0.99)  //  we anyway do not use MD forces at S=1
@@ -999,7 +1000,9 @@ for (int d=0; d<3; d++)
               }
               else 
               {
-                fh->p_hybr_m[n][d] += sigma * 1.58 * DRNOR();
+                double p_h = fh->p_hybr_m[n][d];
+                p_h *=theta;
+                fh->p_hybr_m[n][d] = p_h + sigma * 1.58 * DRNOR();
               }
               // fh->p_hybr_m[n][d] =
               //     md_part                      // θ · (1−S) p_MD

@@ -992,18 +992,21 @@ for (int d=0; d<3; d++)
               // md_part *= theta;
 
               // Rebuild hybrid momentum and velocity
-              if (S < 0.99)
-              {
-                  fh->p_hybr_m[n][d] = (1.0 - S) * (1.0 - lambda_s) *
-                  fh->p_mol_m[n][d] +  sigma * 1.58 * DRNOR()+ (S + lambda_s - S * lambda_s) *
-                  fh->p_fhparticle[n][d];
-              }
-              else 
-              {
-                double p_h = fh->p_hybr_m[n][d];
-                p_h *=theta;
-                fh->p_hybr_m[n][d] = p_h + sigma * 1.58 * DRNOR();
-              }
+              double p_h = fh->p_hybr_m[n][d];
+              p_h *=theta;
+              fh->p_hybr_m[n][d] = p_h + sigma * 1.58 * DRNOR();
+              // if (S < 0.99)
+              // {
+              //     fh->p_hybr_m[n][d] = (1.0 - S) * (1.0 - lambda_s) *
+              //     fh->p_mol_m[n][d] +  sigma * 1.58 * DRNOR()+ (S + lambda_s - S * lambda_s) *
+              //     fh->p_fhparticle[n][d];
+              // }
+              // else 
+              // {
+              //   double p_h = fh->p_hybr_m[n][d];
+              //   p_h *=theta;
+              //   fh->p_hybr_m[n][d] = p_h + sigma * 1.58 * DRNOR();
+              // }
               // fh->p_hybr_m[n][d] =
               //     md_part                      // θ · (1−S) p_MD
               //     + (S + lambda_s - S * lambda_s) * fh->p_fhparticle[n][d] // FH contribution

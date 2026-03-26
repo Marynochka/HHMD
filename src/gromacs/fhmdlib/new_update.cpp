@@ -561,14 +561,14 @@ for (int d=0; d<3; d++)
           // acceleration of the hybrid particle (Eq. 13 in formulas_April.pdf)
 
           // s =1 MARYNA fix
-          if (S < 0.99)
-          {
+          // if (S < 0.99)
+          // {
             a_hybr[d] = ((1.0 - S) * (1.0 - lambda_s)) * f[n][d] / fh->m_hybr[n];
-          }
-          else
-          {
-           a_hybr[d] = 0.0;
-          }
+          // }
+          // else
+          // {
+          //  a_hybr[d] = 0.0;
+          // }
           //  // fh->v_hybr[n][d] = 0;
           //}
           // if (S < 0.99)  //  we anyway do not use MD forces at S=1
@@ -680,15 +680,17 @@ for (int d=0; d<3; d++)
                 arr[k].hybr_vel_star_without_mu[d] += fh->v_hybr[n][d];
               }
               arr[k].hybr_vel_star[d] += mu_k * fh->v_hybr[n][d];
-
-              if (S < 0.99){
               arr[k].hybr_momentum_star[d] +=
-                  mu_k * fh->m_hybr[n] * fh->v_hybr[n][d];  
-                }
-                else {
-                  arr[k].hybr_momentum_star[d] +=
-                  mu_k * fh->v_hybr[n][d];  
-                }// new stds
+                  mu_k * fh->m_hybr[n] * fh->v_hybr[n][d]; 
+
+              // if (S < 0.99){
+              // arr[k].hybr_momentum_star[d] +=
+              //     mu_k * fh->m_hybr[n] * fh->v_hybr[n][d];  
+              //   }
+              //   else {
+              //     arr[k].hybr_momentum_star[d] +=
+              //     mu_k * fh->v_hybr[n][d];  
+              //   }// new stds
             }
 
             arr[k].tot_mu += mu_k;
@@ -994,7 +996,7 @@ for (int d=0; d<3; d++)
               // Rebuild hybrid momentum and velocity
               double p_h = fh->p_hybr_m[n][d];
               p_h *=theta;
-              fh->p_hybr_m[n][d] = p_h + sigma * 1.58 * DRNOR();
+              fh->p_hybr_m[n][d] = p_h + sigma * 1.0 * DRNOR();
               // if (S < 0.99)
               // {
               //     fh->p_hybr_m[n][d] = (1.0 - S) * (1.0 - lambda_s) *

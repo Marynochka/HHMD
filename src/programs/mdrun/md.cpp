@@ -1129,6 +1129,7 @@ double gmx::do_md(FILE *fplog, t_commrec *cr, int nfile, const t_filenm fnm[],
     		    fr->ic->hhmd_S1 = 1;
             else
             	fr->ic->hhmd_S1 = 0;
+            fr->ic->hhmd_mindist = fhmd.beta;		
 			
 /*            if (is_fhmd)
 		    {

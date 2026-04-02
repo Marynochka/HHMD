@@ -133,9 +133,18 @@
             }
                     
             rsq = dx*dx + dy*dy + dz*dz;
+            real rsq_true = rsq; 
 
-            if (rsq < 0.11*0.11)
-                rsq = 0.11*0.11;
+            if (rsq < ic->hhmd_mindist*ic->hhmd_mindist)
+                {
+				rsq = ic->hhmd_mindist*ic->hhmd_mindist;
+				if (rsq_true < 0.01)
+		    		rsq_true = 0.01;
+				real ascale = ic->hhmd_mindist * gmx::invsqrt(rsq_true);
+				dx *= ascale;
+				dy *= ascale;
+				dz *= ascale;
+				}
 
 			/* Prepare to enforce the cut-off. */
             skipmask = (rsq >= rcut2) ? 0 : skipmask;
